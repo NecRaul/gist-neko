@@ -1,5 +1,6 @@
 import requests
 import os
+import subprocess
 
 public_access_token = ""
 user = "NecRaul"
@@ -21,7 +22,8 @@ def download_with_request(gists):
                 file.write(response.content)
                 
 def download_with_git(gists):
-    print(gists)
+    for gist in gists:
+        subprocess.call(["git", "clone", gist["git_pull_url"]])
     
 headers = {
     "Authorization": f"token {public_access_token}",
@@ -30,6 +32,6 @@ headers = {
 response = requests.get(API_ENDPOINT, headers=headers)
 
 if response.status_code == 200:
-    download_with_request(response.json()) if GIT else download_with_git(response.json())
+    download_with_request(response.json()) if not GIT else download_with_git(response.json())
 else:
     print(response.status_code, response.text)
