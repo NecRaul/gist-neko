@@ -12,7 +12,8 @@ response = requests.get(f"https://api.github.com/users/{user}/gists", headers=he
 
 for gist in response.json():
     gist_id = gist["id"]
-    os.mkdir(gist_id)
+    if not os.path.exists(gist_id):
+        os.mkdir(gist_id)
     files = gist["files"]
     for filename in files:
         gist_url = files[filename]["raw_url"]
