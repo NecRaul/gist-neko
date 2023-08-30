@@ -1,4 +1,5 @@
 import requests
+import os
 
 public_access_token = ""
 user = "NecRaul"
@@ -11,9 +12,10 @@ response = requests.get(f"https://api.github.com/users/{user}/gists", headers=he
 
 for gist in response.json():
     gist_id = gist["id"]
+    os.mkdir(gist_id)
     files = gist["files"]
     for filename in files:
         gist_url = files[filename]["raw_url"]
         response = requests.get(gist_url, headers=headers)
-        with open(filename, "wb") as file:
+        with open(f"{gist_id}/{filename}", "wb") as file:
             file.write(response.content)
