@@ -6,7 +6,9 @@ user = "NecRaul"
 
 API_ENDPOINT = f"https://api.github.com/users/{user}/gists"
 
-def download_gists(gists):
+GIT = True
+
+def download_with_request(gists):
     for gist in gists:
         gist_id = gist["id"]
         if not os.path.exists(gist_id):
@@ -17,15 +19,17 @@ def download_gists(gists):
             response = requests.get(gist_url, headers=headers)
             with open(f"{gist_id}/{filename}", "wb") as file:
                 file.write(response.content)
-
+                
+def download_with_git(gists):
+    print(gists)
+    
 headers = {
     "Authorization": f"token {public_access_token}",
 }
 
 response = requests.get(API_ENDPOINT, headers=headers)
 
-
 if response.status_code == 200:
-    download_gists(response.json())
+    download_with_request(response.json()) if GIT else download_with_git(response.json())
 else:
     print(response.status_code, response.text)
