@@ -23,7 +23,10 @@ def download_with_request(gists):
                 
 def download_with_git(gists):
     for gist in gists:
-        subprocess.call(["git", "clone", gist["git_pull_url"]])
+        if not os.path.exists(gist["id"]):
+            subprocess.call(["git", "clone", gist["git_pull_url"]])
+        else:
+            subprocess.call(["git", "pull", gist["git_pull_url"]])
     
 headers = {
     "Authorization": f"token {public_access_token}",
