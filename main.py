@@ -4,11 +4,13 @@ import os
 public_access_token = ""
 user = "NecRaul"
 
+API_ENDPOINT = f"https://api.github.com/users/{user}/gists"
+
 headers = {
     "Authorization": f"token {public_access_token}",
 }
 
-response = requests.get(f"https://api.github.com/users/{user}/gists", headers=headers)
+response = requests.get(API_ENDPOINT, headers=headers)
 
 for gist in response.json():
     gist_id = gist["id"]
