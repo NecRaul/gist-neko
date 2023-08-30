@@ -12,4 +12,6 @@ response = requests.get(f"https://api.github.com/users/{user}/gists", headers=he
 for gist in response.json():
     gist_id = gist["id"]
     files = gist["files"]
-    print(gist_id, files)
+    for filename in files:
+        gist_url = files[filename]["raw_url"]
+        print(gist_url)
