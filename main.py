@@ -14,4 +14,5 @@ for gist in response.json():
     files = gist["files"]
     for filename in files:
         gist_url = files[filename]["raw_url"]
-        print(gist_url)
+        response = requests.get(gist_url, headers=headers)
+        print(response.text)
