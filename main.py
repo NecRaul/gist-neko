@@ -10,4 +10,6 @@ headers = {
 response = requests.get(f"https://api.github.com/users/{user}/gists", headers=headers)
 
 for gist in response.json():
-    print(gist)
+    gist_id = gist["id"]
+    files = gist["files"]
+    print(gist_id, files)
