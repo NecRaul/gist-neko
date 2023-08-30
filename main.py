@@ -9,4 +9,5 @@ headers = {
 
 response = requests.get(f"https://api.github.com/users/{user}/gists", headers=headers)
 
-print(response.json())
+for gist in response.json():
+    print(gist)
