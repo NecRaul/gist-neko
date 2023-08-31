@@ -2,10 +2,6 @@ import requests
 import os
 import subprocess
 
-public_access_token = ""
-user = "NecRaul"
-git_check = False
-
 def with_request(gist, headers):
     gist_id = gist["id"]
     if not os.path.exists(gist_id):
@@ -23,8 +19,8 @@ def with_git(gist):
     else:
         subprocess.call(["git", "pull", gist["git_pull_url"]])
 
-def download_gists():
-    API_ENDPOINT = f"https://api.github.com/users/{user}/gists"
+def download_gists(username, public_access_token, git_check):
+    API_ENDPOINT = f"https://api.github.com/users/{username}/gists"
     
     headers = {
         "Authorization": f"token {public_access_token}",
@@ -37,5 +33,3 @@ def download_gists():
             with_request(gist, headers) if not git_check else with_git(gist)
     else:
         print(response.status_code, response.text)
-        
-download_gists()
