@@ -19,11 +19,11 @@ def with_git(gist):
     else:
         subprocess.call(["git", "pull", gist["git_pull_url"]])
 
-def download_gists(username, public_access_token, git_check):
+def download_gists(username, token, git_check):
     API_ENDPOINT = f"https://api.github.com/users/{username}/gists"
     
     headers = {
-        "Authorization": f"token {public_access_token}",
+        "Authorization": f"token {token}",
     }
 
     response = requests.get(API_ENDPOINT, headers=headers)
