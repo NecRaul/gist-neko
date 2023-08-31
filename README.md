@@ -124,6 +124,6 @@ If you want to download other people's gists (public and private), you can do
 gist-neko -u <their-username> -t <their-personal-access-token>
 ```
 
-#### Future features
+#### Future Features
 
 Adding `GITHUB_USERNAME` and `GITHUB_PERSONAL_ACCESS_TOKEN` with the CLI.
