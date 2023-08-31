@@ -29,6 +29,6 @@ You can run the script with
 ```Python
 gist-neko
     -u <github-username>
-    -t <github-personal-access-token>
+    -t <github-personal-access-token> (optional - you will just download the public gists instead of all gists)
     -g (optional - typing -g <anything> means you will be downloading using git)
 ```

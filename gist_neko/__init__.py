@@ -22,12 +22,8 @@ def main():
     
     git_check = args.git # false by default/if you don't use the argument
     
-    if (not username and not token):
-        print("Pass your Github username and public access token with -u and -t respectively.")
-    elif (not username):
+    if (not username):
         print("Pass your Github username with -u.")
-    elif (not token):
-        print("Pass your Github public access token with -t.")
     else:
         download_gists(username, token, git_check)
     
