@@ -26,6 +26,9 @@ def download_gists(username, token, git_check):
         "Authorization": f"token {token}",
     }
 
+    if not token:
+        headers = None
+    
     response = requests.get(API_ENDPOINT, headers=headers)
 
     if response.status_code == 200:
