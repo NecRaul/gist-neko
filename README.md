@@ -52,13 +52,13 @@ gist-neko -u <github-username> -t <github-personal-access-token> -g <anything>
 
 #### Public and Private Gists without Environment Variables
 
-This will use the specified **Github username** and **public access token** and download all **public and private gists** using `requests`.
+This will use the specified **Github username** and **personal access token** and download all **public and private gists** using `requests`.
 
 ```Python
 gist-neko -u <github-username> -t <github-personal-access-token>
 ```
 
-This will use the specified **Github username** and **public access token** and download all **public and private gists** using `git`.
+This will use the specified **Github username** and **personal access token** and download all **public and private gists** using `git`.
 
 ```Python
 gist-neko -u <github-username> -t <github-personal-access-token> -g <anything>
@@ -66,13 +66,13 @@ gist-neko -u <github-username> -t <github-personal-access-token> -g <anything>
 
 #### Public and Private Gists with Environment Variables
 
-This will use the **Github username** and **public access token** in the **environment variables** and download all **public and private gists** using `requests`.
+This will use the **Github username** and **personal access token** in the **environment variables** and download all **public and private gists** using `requests`.
 
 ```Python
 gist-neko -e <anything>
 ```
 
-This will use the **Github username** and **public access token** in the **environment variables** and download all **public and private gists** using `git`.
+This will use the **Github username** and **personal access token** in the **environment variables** and download all **public and private gists** using `git`.
 
 ```Python
 gist-neko -e <anything> -g <anything>
@@ -80,13 +80,13 @@ gist-neko -e <anything> -g <anything>
 
 #### Public and Private Gists with Environment Variables (Overriding passed Username and Public Access Key)
 
-This will **ignore** the passed **Github username** and **public access key** instead using **environment variables** and download all **public and private gists** using `requests`.
+This will **ignore** the passed **Github username** and **personal access token** instead using **environment variables** and download all **public and private gists** using `requests`.
 
 ```Python
 gist-neko -u <github-username> -t <github-personal-access-token> -e <anything>
 ```
 
-This will **ignore** the passed **Github username** and **public access key** instead using **environment variables** and download all **public and private gists** using `git`.
+This will **ignore** the passed **Github username** and **personal access token** instead using **environment variables** and download all **public and private gists** using `git`.
 
 ```Python
 gist-neko -u <github-username> -t <github-personal-access-token> -e <anything> -g <anything>
