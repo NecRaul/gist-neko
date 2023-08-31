@@ -1,5 +1,6 @@
 from .download import download_gists
 import argparse
+import os
 
 def main():
     parser = argparse.ArgumentParser(description="Download specified user's all gists at once.")
@@ -9,8 +10,16 @@ def main():
     
     args = parser.parse_args()
     
-    username = args.username
-    public_access_token = args.token
+    if args.username:
+        username = args.username
+    else:
+        username = os.getenv("GITHUB_USERNAME")
+    
+    if args.token:
+        public_access_token = args.token
+    else:
+        public_access_token = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
+    
     git_check = args.git # false by default or if you don't use the argument
     
     print(username)
