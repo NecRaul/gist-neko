@@ -13,7 +13,11 @@ def main():
     public_access_token = args.token
     git_check = args.git
     
-    download.download_gists(username, public_access_token, git_check)
+    print(username)
+    print(public_access_token)
+    print(git_check)
+    
+    download_gists(username, public_access_token, git_check)
     
 if __name__ == "__main__":
     main()
