@@ -78,7 +78,7 @@ This will use the **Github username** and **personal access token** in the **env
 gist-neko -e <anything> -g <anything>
 ```
 
-#### Public and Private Gists with Environment Variables (Overriding passed Username and Public Access Key)
+#### Public and Private Gists with Environment Variables (Overriding passed Username and Personal Access Token)
 
 This will **ignore** the passed **Github username** and **personal access token** instead using **environment variables** and download all **public and private gists** using `requests`.
 
