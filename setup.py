@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "1.0"
+VERSION = "1.1"
 DESCRIPTION = "CLI for downloading all gists from a specified user."
 LONG_DESCRIPTION = "Download specified user's all gists at once. You can also use environment variables if you don't want to pass through arguments everytime you want to download a gist."
 AUTHOR = "NecRaul"
