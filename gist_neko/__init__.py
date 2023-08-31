@@ -16,17 +16,13 @@ def main():
         username = os.getenv("GITHUB_USERNAME")
     
     if args.token:
-        public_access_token = args.token
+        token = args.token
     else:
-        public_access_token = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
+        token = os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
     
-    git_check = args.git # false by default or if you don't use the argument
+    git_check = args.git # false by default/if you don't use the argument
     
-    print(username)
-    print(public_access_token)
-    print(git_check)
-    
-    download_gists(username, public_access_token, git_check)
+    download_gists(username, token, git_check)
     
 if __name__ == "__main__":
     main()
