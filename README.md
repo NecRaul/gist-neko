@@ -30,29 +30,29 @@ You can run the script with
 gist-neko
     -u <github-username>
     -t <github-personal-access-token> (optional - you will just download the public gists instead of all gists)
-    -e (optional - typing -e <anything> means you will be using environment variables. This overrides -u and -t)
-    -g (optional - typing -g <anything> means you will be downloading using git)
-    -gu <github-username> (this will put <github-username> as environment variable)
-    -gpat <github-personal-access-token> (this will put <github-personal-access-token> as environment variable)
+    -e (optional - means you will be using environment variables. This overrides -u and -t)
+    -g (optional - means you will be downloading using git)
+    -gu <github-username> (this will set <github-username> as environment variable)
+    -gpat <github-personal-access-token> (this will set <github-personal-access-token> as environment variable)
 ```
 
 ### Examples
 
-#### Setting Environment Variables (Only works on Windows)
+#### Setting Environment Variables
 
-This will set the specified **Github username** and **personal access token** as your `GITHUB_USERNAME` and `GITHUB_PERSONAL_ACCESS_TOKEN` environment variable respectively.
+This will set the specified **Github username** and **personal access token** as your `GITHUB_USERNAME` and `GITHUB_PERSONAL_ACCESS_TOKEN` environment variable respectively. On Linux this is a bit buggy.
 
 ```Python
 gist-neko -gu <github-username> -gpat <github-personal-access-token>
 ```
 
-This will set the specified **Github username** as your `GITHUB_USERNAME` environment variable.
+This will set the specified **Github username** as your `GITHUB_USERNAME` environment variable. On Linux this is a bit buggy.
 
 ```Python
 gist-neko -gu <github-username>
 ```
 
-This will set the specified **personal access token** as your `GITHUB_PERSONAL_ACCESS_TOKEN` environment variable.
+This will set the specified **personal access token** as your `GITHUB_PERSONAL_ACCESS_TOKEN` environment variable. On Linux this is a bit buggy.
 
 ```Python
 gist-neko -gpat <github-personal-access-token>
@@ -145,13 +145,3 @@ If you want to download other people's gists (public and private), you can do
 ```Python
 gist-neko -u <their-username> -t <their-personal-access-token>
 ```
-
-#### Elephant in the room
-
-`-gu` and `-gpat` doesn't work on Linux. Why you might ask?
-
-First of all, I suck at Linux.
-
-Second of all, the code I wrote should technically work but gives me the file not found error despite `~/.bashrc` being there.
-
-I'll try to fix it as soon as possible (if I don't forget).

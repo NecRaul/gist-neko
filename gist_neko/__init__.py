@@ -7,8 +7,8 @@ def main():
     parser = argparse.ArgumentParser(description="Download specified user's all gists at once")
     parser.add_argument("-u", "--username", type=str, metavar="Username", help="Github username to download gists from.")
     parser.add_argument("-t", "--token", type=str, metavar="Token", help="Github public access token if you want to also download private gists.")
-    parser.add_argument("-e", "--environment", type=bool, help="Whether to use environment variables or not.")
-    parser.add_argument("-g", "--git", type=bool, help="Whether to download with git or not. False by default since it's dependent on whether or not git is downloaded (and your ssh/gpg key). IF YOU TYPE ANYTHING IN AFTER -g/--git IT WILL BE ACCEPTED AS TRUE.")
+    parser.add_argument("-e", "--environment", action="store_true", help="Whether to use environment variables or not.")
+    parser.add_argument("-g", "--git", action="store_true", help="Whether to download with git or not. False by default since it's dependent on whether or not git is downloaded (and your ssh/gpg key). IF YOU TYPE ANYTHING IN AFTER -g/--git IT WILL BE ACCEPTED AS TRUE.")
     parser.add_argument("-gu", "--gusername", type=str, metavar="Username", help="Set Github username as environment variable.")
     parser.add_argument("-gpat", "--gpat", type=str, metavar="Token", help="Set Github personal access token as environment variable.")
     
