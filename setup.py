@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
 
-VERSION = "1.5"
+VERSION = "1.6"
 DESCRIPTION = "CLI for downloading all gists from a specified user."
-LONG_DESCRIPTION = "Download specified user's all gists at once.\nYou can also use environment variables if you don't want to pass through arguments everytime you want to download a gist.\nIf you don't provide a public access token it will only download public gists.\nFor more information check out: https://github.com/NecRaul/gist-neko/"
+with open("README.md", "r") as file:
+    LONG_DESCRIPTION = file.read()
 AUTHOR = "NecRaul"
 
 setup(
@@ -10,6 +11,7 @@ setup(
     version=VERSION,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
+    long_description_content_type = "text/markdown",
     author=AUTHOR,
     packages=find_packages(),
     install_requires=["requests"],
