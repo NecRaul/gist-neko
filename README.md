@@ -4,7 +4,7 @@ CLI for downloading all gists from a specified user.
 
 ## Requirements
 
-`requests` is used for getting information from the Github API and downloading the gists (if you don't use git).
+`requests` is used to get information from the Github API and download the gists (if you don't use -g/--git to download using git).
 
 If you want to build this on your own, you can install the requirements with
 
