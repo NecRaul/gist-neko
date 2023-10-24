@@ -17,7 +17,7 @@ def with_git(gist):
     if not os.path.exists(gist["id"]):
         subprocess.call(["git", "clone", gist["git_pull_url"]])
     else:
-        subprocess.call(["git", "pull", gist["git_pull_url"]])
+        subprocess.call(["git", "-C", gist["id"], "pull"])
 
 def download_gists(username, token, git_check):
     API_ENDPOINT = f"https://api.github.com/users/{username}/gists"
