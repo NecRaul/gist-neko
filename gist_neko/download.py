@@ -14,10 +14,12 @@ def with_request(gist, headers):
             file.write(response.content)
 
 def with_git(gist):
-    if not os.path.exists(gist["id"]):
-        subprocess.call(["git", "clone", gist["git_pull_url"]])
+    gist_id = gist["id"]
+    gist_pull_url = f"git@gist.github.com:{gist_id}.git"
+    if not os.path.exists(gist_id):
+        subprocess.call(["git", "clone", gist_pull_url])
     else:
-        subprocess.call(["git", "-C", gist["id"], "pull"])
+        subprocess.call(["git", "-C", gist_id, "pull"])
 
 def download_gists(username, token, git_check):
     API_ENDPOINT = f"https://api.github.com/users/{username}/gists"
