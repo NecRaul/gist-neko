@@ -11,16 +11,23 @@ setup(
     version=VERSION,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
-    long_description_content_type = "text/markdown",
+    long_description_content_type="text/markdown",
     author=AUTHOR,
     packages=find_packages(),
     install_requires=["requests"],
-    keywords=["python", "gists downloader", "downloader", "gists", "gist-neko", "kuroneko"],
+    keywords=[
+        "python",
+        "gists downloader",
+        "downloader",
+        "gists",
+        "gist-neko",
+        "kuroneko",
+    ],
     url="https://github.com/NecRaul/gist-neko",
     project_urls={
-            'Documentation': 'https://github.com/NecRaul/gist-neko#readme',
-            'Source': 'https://github.com/NecRaul/gist-neko',
-        },
+        "Documentation": "https://github.com/NecRaul/gist-neko#readme",
+        "Source": "https://github.com/NecRaul/gist-neko",
+    },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -29,7 +36,7 @@ setup(
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Topic :: Internet :: WWW/HTTP"
+        "Topic :: Internet :: WWW/HTTP",
     ],
     py_modules=["download", "environment"],
     entry_points={
