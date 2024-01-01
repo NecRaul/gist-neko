@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "1.10"
+VERSION = "1.11"
 DESCRIPTION = "CLI for downloading all gists from a specified user."
 with open("README.md", "r") as file:
     LONG_DESCRIPTION = file.read()
