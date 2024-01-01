@@ -2,6 +2,7 @@ import requests
 import os
 import subprocess
 
+
 def with_request(gist, headers):
     gist_id = gist["id"]
     if not os.path.exists(gist_id):
@@ -13,6 +14,7 @@ def with_request(gist, headers):
         with open(f"{gist_id}/{filename}", "wb") as file:
             file.write(response.content)
 
+
 def with_git(gist):
     gist_id = gist["id"]
     gist_pull_url = f"git@gist.github.com:{gist_id}.git"
@@ -21,16 +23,17 @@ def with_git(gist):
     else:
         subprocess.call(["git", "-C", gist_id, "pull"])
 
+
 def download_gists(username, token, git_check):
     API_ENDPOINT = f"https://api.github.com/users/{username}/gists"
-    
+
     headers = {
         "Authorization": f"token {token}",
     }
 
     if not token:
         headers = None
-    
+
     response = requests.get(API_ENDPOINT, headers=headers)
 
     if response.status_code == 200:
