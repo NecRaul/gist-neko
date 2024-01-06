@@ -7,6 +7,9 @@ def with_request(gist, headers):
     folder = name_folder(gist)
     if not os.path.exists(folder):
         os.mkdir(folder)
+        print(f"Downloading the gist '{folder}'...")
+    else:
+        print(f"Updating the gist '{folder}'...")
     files = gist["files"]
     for filename in files:
         gist_url = files[filename]["raw_url"]
