@@ -1,6 +1,7 @@
 import requests
 import os
 import subprocess
+import shutil
 
 
 def with_request(gist, headers):
@@ -10,6 +11,8 @@ def with_request(gist, headers):
         print(f"Downloading the gist '{folder}'...")
     else:
         print(f"Updating the gist '{folder}'...")
+        shutil.rmtree(folder)
+
     files = gist["files"]
     for filename in files:
         gist_url = files[filename]["raw_url"]
