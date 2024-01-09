@@ -22,7 +22,7 @@ Python's native `os` (used to check for whether a folder exists or not), `argpar
 
 ## How it works
 
-I send requests to `https://api.github.com/gists/`, depending on the arguments passed to the script, I either download all the gists in specified user's account with either `requests` or `git`.
+I send requests to `https://api.github.com/users/{username}/gists`, depending on the arguments passed to the script, I either download all the gists in specified user's account with either `requests` or `git`.
 
 You can run the script with
 
