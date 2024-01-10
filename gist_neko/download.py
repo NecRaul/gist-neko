@@ -25,9 +25,9 @@ def with_git(gist):
     folder = name_folder(gist)
     gist_pull_url = f"git@gist.github.com:{gist['id']}.git"
     if not os.path.exists(folder):
-        subprocess.call(["git", "clone", gist_pull_url, folder])
+        subprocess.call(["git", "clone", "--recursive", gist_pull_url, folder])
     else:
-        subprocess.call(["git", "-C", folder, "pull"])
+        subprocess.call(["git", "-C", folder, "pull", "--recurse-submodules"])
 
 
 def name_folder(gist):
