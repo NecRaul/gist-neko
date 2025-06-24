@@ -6,33 +6,33 @@ import shutil
 
 def download_with_requests(gists, headers):
     for gist in gists:
-        folder = name_folder(gist)
-        if not os.path.exists(folder):
-            os.mkdir(folder)
-            print(f"Downloading the gist '{folder}'...")
+        gist_name = name_gist(gist)
+        if not os.path.exists(gist_name):
+            os.mkdir(gist_name)
+            print(f"Downloading the gist '{gist_name}'...")
         else:
-            print(f"Updating the gist '{folder}'...")
-            shutil.rmtree(folder)
+            print(f"Updating the gist '{gist_name}'...")
+            shutil.rmtree(gist_name)
         files = gist["files"]
         for filename in files:
             gist_url = files[filename]["raw_url"]
             response = requests.get(gist_url, headers=headers)
-            with open(f"{folder}/{filename}", "wb") as file:
+            with open(f"{gist_name}/{filename}", "wb") as file:
                 file.write(response.content)
 
 
 def download_with_git(gists):
     for gist in gists:
-        folder = name_folder(gist)
+        gist_name = name_gist(gist)
         gist_pull_url = f"git@gist.github.com:{gist['id']}.git"
-        if not os.path.exists(folder):
-            subprocess.call(["git", "clone", "--recursive", gist_pull_url, folder])
+        if not os.path.exists(gist_name):
+            subprocess.call(["git", "clone", "--recursive", gist_pull_url, gist_name])
         else:
-            print(f"Pulling '{folder}'...")
-            subprocess.call(["git", "-C", folder, "pull", "--recurse-submodules"])
+            print(f"Pulling '{gist_name}'...")
+            subprocess.call(["git", "-C", gist_name, "pull", "--recurse-submodules"])
 
 
-def name_folder(gist):
+def name_gist(gist):
     return gist["description"] if gist["description"] != "" else gist["id"]
 
 
