@@ -28,6 +28,7 @@ def download_with_git(gists):
         if not os.path.exists(folder):
             subprocess.call(["git", "clone", "--recursive", gist_pull_url, folder])
         else:
+            print(f"Pulling '{folder}'...")
             subprocess.call(["git", "-C", folder, "pull", "--recurse-submodules"])
 
 
