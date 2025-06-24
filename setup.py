@@ -5,6 +5,7 @@ DESCRIPTION = "CLI for downloading all gists from a specified user."
 with open("README.md", "r") as file:
     LONG_DESCRIPTION = file.read()
 AUTHOR = "NecRaul"
+AUTHOR_EMAIL = "necraul2001@gmail.com"
 
 setup(
     name="gist_neko",
@@ -13,13 +14,13 @@ setup(
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
     packages=find_packages(),
-    install_requires=["requests"],
     keywords=[
         "python",
-        "gists downloader",
+        "gist downloader",
         "downloader",
-        "gists",
+        "gist",
         "gist-neko",
         "kuroneko",
     ],
@@ -27,12 +28,12 @@ setup(
     project_urls={
         "Documentation": "https://github.com/NecRaul/gist-neko#readme",
         "Source": "https://github.com/NecRaul/gist-neko",
+        "Issues": "https://github.com/NecRaul/gist-neko/issues",
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)",
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
@@ -41,7 +42,7 @@ setup(
     py_modules=["download", "environment"],
     entry_points={
         "console_scripts": [
-            "gist-neko = gist_neko.main:main",
+            "gist-neko = gist_neko:main",
         ],
     },
 )
