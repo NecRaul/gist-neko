@@ -34,20 +34,34 @@ def name_folder(gist):
     return gist["description"] if gist["description"] != "" else gist["id"]
 
 
+def get_all_gists(username, headers):
+    gists = []
+    page = 1
+
+    while True:
+        page_query = f"?per_page=100&page={page}"
+        API_ENDPOINT = f"https://api.github.com/users/{username}/gists{page_query}"
+
+        response = requests.get(API_ENDPOINT, headers=headers)
+
+        if response.status_code != 200:
+            print(response.status_code, response.text)
+            break
+
+        page_gists = response.json()
+
+        if not page_gists:
+            break
+
+        gists.extend(page_gists)
+        page += 1
+
+    return gists
+
+
 def download_gists(username, token, git_check):
-    API_ENDPOINT = f"https://api.github.com/users/{username}/gists"
+    headers = {"Authorization": f"token {token}"} if token else None
+    gists = get_all_gists(username, headers)
 
-    headers = {
-        "Authorization": f"token {token}",
-    }
-
-    if not token:
-        headers = None
-
-    response = requests.get(API_ENDPOINT, headers=headers)
-
-    if response.status_code == 200:
-        for gist in response.json():
-            with_request(gist, headers) if not git_check else with_git(gist)
-    else:
-        print(response.status_code, response.text)
+    for gist in gists:
+        with_request(gist, headers) if not git_check else with_git(gist)
