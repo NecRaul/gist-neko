@@ -1,7 +1,8 @@
-import requests
 import os
-import subprocess
 import shutil
+import subprocess
+
+import requests
 
 
 def download_with_requests(gists, headers):
