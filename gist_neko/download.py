@@ -6,14 +6,21 @@ import requests
 
 
 def download_with_requests(gists, headers):
-    for gist in gists:
+    gist_count = len(gists)
+    count_digit = len((str(gist_count)))
+    for i, gist in enumerate(gists, start=1):
         gist_name = name_gist(gist)
         if not os.path.exists(gist_name):
             os.mkdir(gist_name)
-            print(f"Downloading the gist '{gist_name}'...")
+            print(
+                f"[{i:>{count_digit}}/{gist_count}] Downloading the gist '{gist_name}'..."
+            )
         else:
-            print(f"Updating the gist '{gist_name}'...")
             shutil.rmtree(gist_name)
+            os.mkdir(gist_name)
+            print(
+                f"[{i:>{count_digit}}/{gist_count}] Updating the gist '{gist_name}'..."
+            )
         files = gist["files"]
         for filename in files:
             gist_url = files[filename]["raw_url"]
@@ -23,13 +30,16 @@ def download_with_requests(gists, headers):
 
 
 def download_with_git(gists):
-    for gist in gists:
+    gist_count = len(gists)
+    count_digit = len((str(gist_count)))
+    for i, gist in enumerate(gists, start=1):
         gist_name = name_gist(gist)
         gist_pull_url = f"git@gist.github.com:{gist['id']}.git"
         if not os.path.exists(gist_name):
+            print(f"[{i:>{count_digit}}/{gist_count}]", end=" ", flush=True)
             subprocess.call(["git", "clone", "--recursive", gist_pull_url, gist_name])
         else:
-            print(f"Pulling '{gist_name}'...")
+            print(f"[{i:>{count_digit}}/{gist_count}] Pulling '{gist_name}'...")
             subprocess.call(["git", "-C", gist_name, "pull", "--recurse-submodules"])
 
 
@@ -69,4 +79,4 @@ def download_gists(username, token, git_check):
     if git_check:
         download_with_git(gists)
     else:
-        download_with_requests(gists)
+        download_with_requests(gists, headers)
