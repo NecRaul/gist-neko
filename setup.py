@@ -42,7 +42,7 @@ setup(
     py_modules=["download", "environment"],
     entry_points={
         "console_scripts": [
-            "gist-neko = gist_neko:main",
+            "gist-neko = gist_neko.cli:main",
         ],
     },
 )

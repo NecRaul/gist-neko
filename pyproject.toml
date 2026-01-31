@@ -40,7 +40,7 @@ Repository = "https://github.com/NecRaul/gist-neko"
 Issues = "https://github.com/NecRaul/gist-neko/issues"
 
 [project.scripts]
-gist-neko = "gist_neko:main"
+gist-neko = "gist_neko.cli:main"
 
 [tool.setuptools]
 py-modules = ["download", "environment"]
