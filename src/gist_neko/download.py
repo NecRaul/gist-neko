@@ -12,15 +12,11 @@ def download_with_requests(gists, headers):
         gist_name = name_gist(gist)
         if not os.path.exists(gist_name):
             os.mkdir(gist_name)
-            print(
-                f"[{i:>{count_digit}}/{gist_count}] Downloading the gist '{gist_name}'..."
-            )
+            print(f"[{i:>{count_digit}}/{gist_count}] Downloading '{gist_name}'...")
         else:
             shutil.rmtree(gist_name)
             os.mkdir(gist_name)
-            print(
-                f"[{i:>{count_digit}}/{gist_count}] Updating the gist '{gist_name}'..."
-            )
+            print(f"[{i:>{count_digit}}/{gist_count}] Updating '{gist_name}'...")
         files = gist["files"]
         for filename in files:
             gist_url = files[filename]["raw_url"]
