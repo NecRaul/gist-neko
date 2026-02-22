@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "gist-neko"
-version = "1.27"
+version = "1.28"
 description = "CLI for downloading all gists from a specified user."
 readme = "README.md"
 authors = [{ name = "NecRaul", email = "necraul@kuroneko.dev" }]
