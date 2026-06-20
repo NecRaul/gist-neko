@@ -1,7 +1,6 @@
+from importlib.metadata import PackageNotFoundError, version
+
 try:
-    import importlib.metadata
-
-    __version__ = importlib.metadata.version("gist_neko")
-
-except importlib.metadata.PackageNotFoundError:
-    __version__ = "1.28"
+    __version__ = version("gist_neko")
+except PackageNotFoundError:
+    __version__ = "dev"
