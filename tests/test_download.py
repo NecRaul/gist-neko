@@ -3,7 +3,7 @@ import unittest
 from contextlib import redirect_stdout
 from unittest.mock import patch
 
-from gist_neko import config, download
+from gist_neko import config, github
 
 
 class _FakeResponse:
@@ -49,9 +49,9 @@ class DownloadTests(unittest.TestCase):
             calls.append((url, headers))
             return responses.pop(0)
 
-        with patch.object(download.requests, "get", side_effect=fake_get):
-            gists = download.get_gists("alice", headers=headers)
-            filtered_repos = download.filter_gists(gists, filters)
+        with patch.object(github.requests, "get", side_effect=fake_get):
+            gists = github.get_gists("alice", headers=headers)
+            filtered_repos = github.filter_gists(gists, filters)
 
         self.assertEqual(
             filtered_repos,
@@ -90,9 +90,9 @@ class DownloadTests(unittest.TestCase):
             calls.append((url, headers))
             return responses.pop(0)
 
-        with patch.object(download.requests, "get", side_effect=fake_get):
-            gists = download.get_gists("alice", headers=headers)
-            filtered_gists = download.filter_gists(gists, filters)
+        with patch.object(github.requests, "get", side_effect=fake_get):
+            gists = github.get_gists("alice", headers=headers)
+            filtered_gists = github.filter_gists(gists, filters)
 
         self.assertEqual(filtered_gists, [fake_gist(1, "private", public=False)])
         self.assertEqual(
@@ -124,11 +124,11 @@ class DownloadTests(unittest.TestCase):
 
         stdout = io.StringIO()
         with (
-            patch.object(download.requests, "get", side_effect=fake_get),
+            patch.object(github.requests, "get", side_effect=fake_get),
             redirect_stdout(stdout),
         ):
-            gists = download.get_gists("alice", headers=headers)
-            filtered_gists = download.filter_gists(gists, filters)
+            gists = github.get_gists("alice", headers=headers)
+            filtered_gists = github.filter_gists(gists, filters)
 
         self.assertEqual(filtered_gists, [fake_gist(1, "first")])
         self.assertIn("500 boom", stdout.getvalue())

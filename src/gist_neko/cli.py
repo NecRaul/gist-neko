@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 
-from gist_neko import __version__, config, download
+from gist_neko import __version__, config, github
 
 
 def main():
@@ -99,4 +99,4 @@ def main():
     if not username:
         parser.error("Pass your Github username with -u.")
 
-    download.download_gists(username, token, git_enabled, filters)
+    github.download_gists(username, token, git_enabled, filters)

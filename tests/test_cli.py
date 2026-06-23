@@ -16,9 +16,7 @@ class CliTests(unittest.TestCase):
             called["args"] = (username, token, git_enabled, filters)
 
         with (
-            patch.object(
-                cli.download, "download_gists", side_effect=fake_download_gists
-            ),
+            patch.object(cli.github, "download_gists", side_effect=fake_download_gists),
             patch.object(
                 sys,
                 "argv",
@@ -37,9 +35,7 @@ class CliTests(unittest.TestCase):
             called["args"] = (username, token, git_enabled, filters)
 
         with (
-            patch.object(
-                cli.download, "download_gists", side_effect=fake_download_gists
-            ),
+            patch.object(cli.github, "download_gists", side_effect=fake_download_gists),
             patch.dict(
                 "os.environ",
                 {
