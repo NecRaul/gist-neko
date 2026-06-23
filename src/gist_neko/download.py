@@ -70,21 +70,21 @@ def get_gists(username, headers):
     return gists
 
 
-def filter_gists(gists, options):
+def filter_gists(gists, filters):
     return [
         gist
         for gist in gists
-        if util.matches_visibility(gist, options["visibility"])
-        and util.matches_fork(gist, options["fork"])
+        if util.matches_visibility(gist, filters["visibility"])
+        and util.matches_fork(gist, filters["fork"])
     ]
 
 
-def download_gists(username, token, git_check, options):
+def download_gists(username, token, git_enabled, filters):
     headers = {"Authorization": f"token {token}"} if token else None
     gists = get_gists(username, headers)
-    filtered_gists = filter_gists(gists, options)
+    filtered_gists = filter_gists(gists, filters)
 
-    if git_check:
+    if git_enabled:
         download_with_git(filtered_gists)
     else:
         download_with_requests(filtered_gists, headers)
