@@ -19,7 +19,7 @@ class _FakeResponse:
 
 
 class DownloadTests(unittest.TestCase):
-    def test_get_all_gists_uses_public_endpoint_without_token(self):
+    def test_get_gists_uses_public_endpoint_without_token(self):
         self.assertEqual(requests.__name__, "requests")
         calls: list[tuple[str, dict | None]] = []
 
@@ -39,7 +39,7 @@ class DownloadTests(unittest.TestCase):
             return responses.pop(0)
 
         with patch.object(download.requests, "get", side_effect=fake_get):
-            gists = download.get_all_gists("alice", headers=None)
+            gists = download.get_gists("alice", headers=None)
 
         self.assertEqual(
             gists,
@@ -56,7 +56,7 @@ class DownloadTests(unittest.TestCase):
             ],
         )
 
-    def test_get_all_gists_forwards_headers_with_authentication_token(self):
+    def test_get_gists_forwards_headers_with_authentication_token(self):
         calls: list[tuple[str, dict | None]] = []
         headers = {"Authorization": "token abc123"}
 
@@ -70,7 +70,7 @@ class DownloadTests(unittest.TestCase):
             return responses.pop(0)
 
         with patch.object(download.requests, "get", side_effect=fake_get):
-            gists = download.get_all_gists("alice", headers=headers)
+            gists = download.get_gists("alice", headers=headers)
 
         self.assertEqual(gists, [{"id": "1", "description": "private"}])
         self.assertEqual(
@@ -87,7 +87,7 @@ class DownloadTests(unittest.TestCase):
             ],
         )
 
-    def test_get_all_gists_stops_and_returns_collected_on_error(self):
+    def test_get_gists_stops_and_returns_collected_on_error(self):
         responses = [
             _FakeResponse(200, [{"id": "1", "description": "first"}]),
             _FakeResponse(500, [], text="boom"),
@@ -101,7 +101,7 @@ class DownloadTests(unittest.TestCase):
             patch.object(download.requests, "get", side_effect=fake_get),
             redirect_stdout(output),
         ):
-            gists = download.get_all_gists("alice", headers=None)
+            gists = download.get_gists("alice", headers=None)
 
         self.assertEqual(gists, [{"id": "1", "description": "first"}])
         self.assertIn("500 boom", output.getvalue())

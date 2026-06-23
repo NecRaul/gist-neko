@@ -39,6 +39,19 @@ def main():
         help="Whether to download with git or not. False by default since it's "
         "dependent on whether or not git is downloaded (and your ssh/gpg key).",
     )
+    parser.add_argument(
+        "--visibility",
+        nargs="+",
+        choices=["public", "private", "both"],
+        default=["both"],
+        help="Visibility levels to include (multiple allowed).",
+    )
+    parser.add_argument(
+        "--fork",
+        choices=["yes", "no", "both"],
+        default="both",
+        help="Filter fork gists.",
+    )
 
     args = parser.parse_args()
 
@@ -50,8 +63,12 @@ def main():
         token = args.token
 
     git_check = args.git
+    options = {
+        "visibility": args.visibility,
+        "fork": args.fork,
+    }
 
     if not username:
         print("Pass your Github username with -u.")
     else:
-        download_gists(username, token, git_check)
+        download_gists(username, token, git_check, options)

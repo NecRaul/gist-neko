@@ -4,6 +4,8 @@ import subprocess
 
 import requests
 
+from . import util
+
 
 def download_with_requests(gists, headers):
     gist_count = len(gists)
@@ -43,7 +45,7 @@ def name_gist(gist):
     return gist["description"] if gist["description"] != "" else gist["id"]
 
 
-def get_all_gists(username, headers):
+def get_gists(username, headers):
     gists = []
     page = 1
 
@@ -68,11 +70,21 @@ def get_all_gists(username, headers):
     return gists
 
 
-def download_gists(username, token, git_check):
+def filter_gists(gists, options):
+    return [
+        gist
+        for gist in gists
+        if util.matches_visibility(gist, options["visibility"])
+        and util.matches_fork(gist, options["fork"])
+    ]
+
+
+def download_gists(username, token, git_check, options):
     headers = {"Authorization": f"token {token}"} if token else None
-    gists = get_all_gists(username, headers)
+    gists = get_gists(username, headers)
+    filtered_gists = filter_gists(gists, options)
 
     if git_check:
-        download_with_git(gists)
+        download_with_git(filtered_gists)
     else:
-        download_with_requests(gists, headers)
+        download_with_requests(filtered_gists, headers)
