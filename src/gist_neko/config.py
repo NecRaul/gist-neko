@@ -4,7 +4,7 @@ import os
 import platform
 from pathlib import Path
 
-from . import util
+from gist_neko import util
 
 CONFIG_NAMESPACE = "necraul"
 CONFIG_NAME = "gist-neko.json"

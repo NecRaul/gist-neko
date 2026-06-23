@@ -4,7 +4,7 @@ import subprocess
 
 import requests
 
-from . import util
+from gist_neko import util
 
 
 def download_with_requests(gists, headers):
