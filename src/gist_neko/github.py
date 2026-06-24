@@ -45,29 +45,32 @@ def name_gist(gist):
     return gist["description"] if gist["description"] != "" else gist["id"]
 
 
-def get_gists(username, headers):
-    gists = []
+def github_get_all(endpoint, headers):
+    items = []
     page = 1
 
     while True:
-        page_query = f"?per_page=100&page={page}"
-        API_ENDPOINT = f"https://api.github.com/users/{username}/gists{page_query}"
+        response = requests.get(
+            endpoint, headers=headers, params={"per_page": 100, "page": page}
+        )
 
-        response = requests.get(API_ENDPOINT, headers=headers)
+        response.raise_for_status()
 
-        if response.status_code != 200:
-            print(response.status_code, response.text)
+        page_items = response.json()
+
+        if not page_items:
             break
 
-        page_gists = response.json()
-
-        if not page_gists:
-            break
-
-        gists.extend(page_gists)
+        items.extend(page_items)
         page += 1
 
-    return gists
+    return items
+
+
+def get_gists(username, headers):
+    endpoint = f"https://api.github.com/users/{username}/gists"
+
+    return github_get_all(endpoint, headers)
 
 
 def filter_gists(gists, filters):
