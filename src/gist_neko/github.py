@@ -1,6 +1,6 @@
-import os
 import shutil
 import subprocess
+from pathlib import Path
 
 import requests
 
@@ -12,19 +12,21 @@ def download_with_requests(gists, headers):
     count_digit = len((str(gist_count)))
     for i, gist in enumerate(gists, start=1):
         gist_name = name_gist(gist)
-        if not os.path.exists(gist_name):
-            os.mkdir(gist_name)
+        gist_dir = Path(gist_name)
+        if not gist_dir.exists():
+            gist_dir.mkdir()
             print(f"[{i:>{count_digit}}/{gist_count}] Downloading '{gist_name}'...")
         else:
-            shutil.rmtree(gist_name)
-            os.mkdir(gist_name)
+            shutil.rmtree(gist_dir)
+            gist_dir.mkdir()
             print(f"[{i:>{count_digit}}/{gist_count}] Updating '{gist_name}'...")
         files = gist["files"]
         for filename in files:
             gist_url = files[filename]["raw_url"]
-            response = requests.get(gist_url, headers=headers)
-            with open(f"{gist_name}/{filename}", "wb") as file:
-                file.write(response.content)
+            response = requests.get(gist_url, headers=headers, timeout=30)
+            response.raise_for_status()
+            safe_filename = Path(filename).name
+            (gist_dir / safe_filename).write_bytes(response.content)
 
 
 def download_with_git(gists):
@@ -33,7 +35,7 @@ def download_with_git(gists):
     for i, gist in enumerate(gists, start=1):
         gist_name = name_gist(gist)
         gist_pull_url = f"git@gist.github.com:{gist['id']}.git"
-        if not os.path.exists(gist_name):
+        if not Path(gist_name).exists():
             print(f"[{i:>{count_digit}}/{gist_count}]", end=" ", flush=True)
             subprocess.call(["git", "clone", "--recursive", gist_pull_url, gist_name])
         else:
