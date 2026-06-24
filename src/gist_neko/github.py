@@ -5,14 +5,15 @@ from pathlib import Path
 import requests
 
 from gist_neko import util
+from gist_neko.models import FiltersConfig, Gist
 
 
-def download_with_requests(gists, headers):
-    gist_count = len(gists)
-    count_digit = len((str(gist_count)))
+def download_with_requests(gists: list[Gist], headers: dict[str, str] | None) -> None:
+    gist_count: int = len(gists)
+    count_digit: int = len((str(gist_count)))
     for i, gist in enumerate(gists, start=1):
-        gist_name = name_gist(gist)
-        gist_dir = Path(gist_name)
+        gist_name: str = name_gist(gist)
+        gist_dir: Path = Path(gist_name)
         if not gist_dir.exists():
             gist_dir.mkdir()
             print(f"[{i:>{count_digit}}/{gist_count}] Downloading '{gist_name}'...")
@@ -20,21 +21,23 @@ def download_with_requests(gists, headers):
             shutil.rmtree(gist_dir)
             gist_dir.mkdir()
             print(f"[{i:>{count_digit}}/{gist_count}] Updating '{gist_name}'...")
-        files = gist["files"]
+        files: dict[str, dict[str, str]] = gist["files"]
         for filename in files:
-            gist_url = files[filename]["raw_url"]
-            response = requests.get(gist_url, headers=headers, timeout=30)
+            gist_url: str = files[filename]["raw_url"]
+            response: requests.Response = requests.get(
+                gist_url, headers=headers, timeout=30
+            )
             response.raise_for_status()
-            safe_filename = Path(filename).name
+            safe_filename: str = Path(filename).name
             (gist_dir / safe_filename).write_bytes(response.content)
 
 
-def download_with_git(gists):
-    gist_count = len(gists)
-    count_digit = len((str(gist_count)))
+def download_with_git(gists: list[Gist]) -> None:
+    gist_count: int = len(gists)
+    count_digit: int = len((str(gist_count)))
     for i, gist in enumerate(gists, start=1):
-        gist_name = name_gist(gist)
-        gist_pull_url = f"git@gist.github.com:{gist['id']}.git"
+        gist_name: str = name_gist(gist)
+        gist_pull_url: str = f"git@gist.github.com:{gist['id']}.git"
         if not Path(gist_name).exists():
             print(f"[{i:>{count_digit}}/{gist_count}]", end=" ", flush=True)
             subprocess.call(["git", "clone", "--recursive", gist_pull_url, gist_name])
@@ -43,39 +46,35 @@ def download_with_git(gists):
             subprocess.call(["git", "-C", gist_name, "pull", "--recurse-submodules"])
 
 
-def name_gist(gist):
+def name_gist(gist: Gist) -> str:
     return gist["description"] if gist["description"] != "" else gist["id"]
 
 
-def github_get_all(endpoint, headers):
-    items = []
+def github_get_all(endpoint: str, headers: dict[str, str] | None) -> list[Gist]:
+    items: list[Gist] = []
     page = 1
 
     while True:
-        response = requests.get(
+        response: requests.Response = requests.get(
             endpoint, headers=headers, params={"per_page": 100, "page": page}
         )
-
         response.raise_for_status()
-
-        page_items = response.json()
-
+        page_items: list[Gist] = response.json()
         if not page_items:
             break
-
         items.extend(page_items)
         page += 1
 
     return items
 
 
-def get_gists(username, headers):
+def get_gists(username: str, headers: dict[str, str] | None) -> list[Gist]:
     endpoint = f"https://api.github.com/users/{username}/gists"
 
     return github_get_all(endpoint, headers)
 
 
-def filter_gists(gists, filters):
+def filter_gists(gists: list[Gist], filters: FiltersConfig) -> list[Gist]:
     return [
         gist
         for gist in gists
@@ -84,10 +83,14 @@ def filter_gists(gists, filters):
     ]
 
 
-def download_gists(username, token, git_enabled, filters):
-    headers = {"Authorization": f"token {token}"} if token else None
-    gists = get_gists(username, headers)
-    filtered_gists = filter_gists(gists, filters)
+def download_gists(
+    username: str, token: str | None, git_enabled: bool, filters: FiltersConfig
+) -> None:
+    headers: dict[str, str] | None = (
+        {"Authorization": f"token {token}"} if token else None
+    )
+    gists: list[Gist] = get_gists(username, headers)
+    filtered_gists: list[Gist] = filter_gists(gists, filters)
 
     if git_enabled:
         download_with_git(filtered_gists)
