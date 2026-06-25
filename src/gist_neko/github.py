@@ -9,7 +9,10 @@ from gist_neko.models import FiltersConfig, Gist
 
 
 def download_with_requests(
-    gists: list[Gist], headers: dict[str, str] | None, directory: Path
+    session: requests.Session,
+    gists: list[Gist],
+    headers: dict[str, str] | None,
+    directory: Path,
 ) -> None:
     gist_count: int = len(gists)
     count_digit: int = len(str(gist_count))
@@ -28,7 +31,7 @@ def download_with_requests(
         files: dict[str, dict[str, str]] = gist["files"]
         for filename in files:
             gist_url: str = files[filename]["raw_url"]
-            response: requests.Response = requests.get(
+            response: requests.Response = session.get(
                 gist_url, headers=headers, timeout=30
             )
             response.raise_for_status()
@@ -63,12 +66,14 @@ def name_gist(gist: Gist) -> str:
     return gist["description"] if gist["description"] != "" else gist["id"]
 
 
-def github_get_all(endpoint: str, headers: dict[str, str] | None) -> list[Gist]:
+def github_get_all(
+    session: requests.Session, endpoint: str, headers: dict[str, str] | None
+) -> list[Gist]:
     items: list[Gist] = []
     page = 1
 
     while True:
-        response: requests.Response = requests.get(
+        response: requests.Response = session.get(
             endpoint, headers=headers, params={"per_page": 100, "page": page}
         )
         response.raise_for_status()
@@ -81,10 +86,12 @@ def github_get_all(endpoint: str, headers: dict[str, str] | None) -> list[Gist]:
     return items
 
 
-def get_gists(username: str, headers: dict[str, str] | None) -> list[Gist]:
+def get_gists(
+    session: requests.Session, username: str, headers: dict[str, str] | None
+) -> list[Gist]:
     endpoint = f"https://api.github.com/users/{username}/gists"
 
-    return github_get_all(endpoint, headers)
+    return github_get_all(session, endpoint, headers)
 
 
 def filter_gists(gists: list[Gist], filters: FiltersConfig) -> list[Gist]:
@@ -104,13 +111,14 @@ def download_gists(
     filters: FiltersConfig,
     directory: Path,
 ) -> None:
-    headers: dict[str, str] | None = (
-        {"Authorization": f"token {token}"} if token else None
-    )
-    gists: list[Gist] = get_gists(username, headers)
-    filtered_gists: list[Gist] = filter_gists(gists, filters)
+    with requests.Session() as session:
+        headers: dict[str, str] | None = (
+            {"Authorization": f"token {token}"} if token else None
+        )
+        gists: list[Gist] = get_gists(session, username, headers)
+        filtered_gists: list[Gist] = filter_gists(gists, filters)
 
-    if git_enabled:
-        download_with_git(filtered_gists, git_args, directory)
-    else:
-        download_with_requests(filtered_gists, headers, directory)
+        if git_enabled:
+            download_with_git(filtered_gists, git_args, directory)
+        else:
+            download_with_requests(session, filtered_gists, headers, directory)

@@ -64,9 +64,14 @@ class DownloadTests(unittest.TestCase):
             calls.append((url, headers, params))
             return responses.pop(0)
 
-        with patch.object(github.requests, "get", side_effect=fake_get):
-            gists: list[dict[str, Any]] = github.get_gists("alice", headers=headers)
-            filtered_gists: list[dict[str, Any]] = github.filter_gists(gists, filters)
+        with patch.object(requests.Session, "get", side_effect=fake_get):
+            with requests.Session() as session:
+                gists: list[dict[str, Any]] = github.get_gists(
+                    session, "alice", headers=headers
+                )
+                filtered_gists: list[dict[str, Any]] = github.filter_gists(
+                    gists, filters
+                )
 
         self.assertEqual(
             filtered_gists,
@@ -111,9 +116,14 @@ class DownloadTests(unittest.TestCase):
             calls.append((url, headers, params))
             return responses.pop(0)
 
-        with patch.object(github.requests, "get", side_effect=fake_get):
-            gists: list[dict[str, Any]] = github.get_gists("alice", headers=headers)
-            filtered_gists: list[dict[str, Any]] = github.filter_gists(gists, filters)
+        with patch.object(requests.Session, "get", side_effect=fake_get):
+            with requests.Session() as session:
+                gists: list[dict[str, Any]] = github.get_gists(
+                    session, "alice", headers=headers
+                )
+                filtered_gists: list[dict[str, Any]] = github.filter_gists(
+                    gists, filters
+                )
 
         self.assertEqual(filtered_gists, [fake_gist(1, "private", public=False)])
         self.assertEqual(
@@ -149,6 +159,7 @@ class DownloadTests(unittest.TestCase):
             calls.append((url, headers, params))
             return responses.pop(0)
 
-        with patch.object(github.requests, "get", side_effect=fake_get):
-            with self.assertRaises(requests.HTTPError):
-                github.get_gists("alice", headers=headers)
+        with patch.object(requests.Session, "get", side_effect=fake_get):
+            with requests.Session() as session:
+                with self.assertRaises(requests.HTTPError):
+                    github.get_gists(session, "alice", headers=headers)
