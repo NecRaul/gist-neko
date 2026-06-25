@@ -12,7 +12,7 @@ def download_with_requests(
     gists: list[Gist], headers: dict[str, str] | None, directory: Path
 ) -> None:
     gist_count: int = len(gists)
-    count_digit: int = len((str(gist_count)))
+    count_digit: int = len(str(gist_count))
     util.validate_directory(directory)
     directory.mkdir(parents=True, exist_ok=True)
     for i, gist in enumerate(gists, start=1):
@@ -36,11 +36,14 @@ def download_with_requests(
             (gist_path / safe_filename).write_bytes(response.content)
 
 
-def download_with_git(gists: list[Gist], directory: Path) -> None:
+def download_with_git(
+    gists: list[Gist], git_args: tuple[list[str], list[str]], directory: Path
+) -> None:
     gist_count: int = len(gists)
     count_digit: int = len((str(gist_count)))
     util.validate_directory(directory)
     directory.mkdir(parents=True, exist_ok=True)
+    clone_args, pull_args = git_args
     for i, gist in enumerate(gists, start=1):
         gist_pull_url: str = f"git@gist.github.com:{gist['id']}.git"
         gist_name: str = name_gist(gist)
@@ -48,10 +51,12 @@ def download_with_git(gists: list[Gist], directory: Path) -> None:
         util.validate_directory(gist_path)
         if not gist_path.exists():
             print(f"[{i:>{count_digit}}/{gist_count}]", end=" ", flush=True)
-            subprocess.call(["git", "clone", "--recursive", gist_pull_url, gist_path])
+            cmd = ["git", "clone", *clone_args, gist_pull_url, gist_path.as_posix()]
+            subprocess.call(cmd)
         else:
             print(f"[{i:>{count_digit}}/{gist_count}] Pulling '{gist_name}'...")
-            subprocess.call(["git", "-C", gist_path, "pull", "--recurse-submodules"])
+            cmd = ["git", "-C", gist_path.as_posix(), "pull", *pull_args]
+            subprocess.call(cmd)
 
 
 def name_gist(gist: Gist) -> str:
@@ -95,6 +100,7 @@ def download_gists(
     username: str,
     token: str | None,
     git_enabled: bool,
+    git_args: tuple[list[str], list[str]],
     filters: FiltersConfig,
     directory: Path,
 ) -> None:
@@ -105,6 +111,6 @@ def download_gists(
     filtered_gists: list[Gist] = filter_gists(gists, filters)
 
     if git_enabled:
-        download_with_git(filtered_gists, directory)
+        download_with_git(filtered_gists, git_args, directory)
     else:
         download_with_requests(filtered_gists, headers, directory)

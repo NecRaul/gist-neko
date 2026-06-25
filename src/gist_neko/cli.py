@@ -107,6 +107,9 @@ def main() -> None:
     token: str | None = cfg["github"]["token"]
     git_enabled: bool = cfg["download"]["git"]["enabled"]
     filters: FiltersConfig = cfg["filters"]
+    clone_args: list[str] = cfg["download"]["git"]["clone_args"]
+    pull_args: list[str] = cfg["download"]["git"]["pull_args"]
+    git_args: tuple[list[str], list[str]] = (clone_args, pull_args)
     directory_value: str | None = cfg["download"]["directory"]
     if directory_value is None:
         raise ValueError("download.directory is required")
@@ -115,4 +118,4 @@ def main() -> None:
     if not username:
         parser.error("Pass your GitHub username with -u.")
 
-    github.download_gists(username, token, git_enabled, filters, directory)
+    github.download_gists(username, token, git_enabled, git_args, filters, directory)
