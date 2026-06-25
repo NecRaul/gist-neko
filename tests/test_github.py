@@ -4,7 +4,7 @@ from gist_neko import config, github
 from gist_neko.models import FiltersConfig, Gist
 
 
-class GithubIntegrationTests(unittest.TestCase):
+class GitHubIntegrationTests(unittest.TestCase):
     def test_fetches_public_gists_from_necraul_account(self) -> None:
         filters: FiltersConfig = config.DEFAULT_CONFIG["filters"]
         gists: list[Gist] = github.get_gists(username="NecRaul", headers=None)

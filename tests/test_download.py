@@ -66,10 +66,10 @@ class DownloadTests(unittest.TestCase):
 
         with patch.object(github.requests, "get", side_effect=fake_get):
             gists: list[dict[str, Any]] = github.get_gists("alice", headers=headers)
-            filtered_repos: list[dict[str, Any]] = github.filter_gists(gists, filters)
+            filtered_gists: list[dict[str, Any]] = github.filter_gists(gists, filters)
 
         self.assertEqual(
-            filtered_repos,
+            filtered_gists,
             [
                 fake_gist(1, "first"),
                 fake_gist(2, "second"),

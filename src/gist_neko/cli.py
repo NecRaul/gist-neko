@@ -37,13 +37,13 @@ def main() -> None:
         "-u",
         "--username",
         type=str,
-        help="Github username to fetch gists from.",
+        help="GitHub username to fetch gists from.",
     )
     parser.add_argument(
         "-t",
         "--token",
         type=str,
-        help="Github public access token for private gists.",
+        help="GitHub public access token for private gists.",
     )
     parser.add_argument(
         "-e",
@@ -56,6 +56,12 @@ def main() -> None:
         "--git",
         action=argparse.BooleanOptionalAction,
         help="Download gists using git instead of archive downloads.",
+    )
+    parser.add_argument(
+        "-d",
+        "--directory",
+        type=str,
+        help="Target directory for downloaded gists.",
     )
     parser.add_argument(
         "--visibility",
@@ -101,8 +107,12 @@ def main() -> None:
     token: str | None = cfg["github"]["token"]
     git_enabled: bool = cfg["download"]["git"]["enabled"]
     filters: FiltersConfig = cfg["filters"]
+    directory_value: str | None = cfg["download"]["directory"]
+    if directory_value is None:
+        raise ValueError("download.directory is required")
+    directory: Path = Path(directory_value).expanduser()
 
     if not username:
-        parser.error("Pass your Github username with -u.")
+        parser.error("Pass your GitHub username with -u.")
 
-    github.download_gists(username, token, git_enabled, filters)
+    github.download_gists(username, token, git_enabled, filters, directory)

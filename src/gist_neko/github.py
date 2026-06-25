@@ -8,19 +8,23 @@ from gist_neko import util
 from gist_neko.models import FiltersConfig, Gist
 
 
-def download_with_requests(gists: list[Gist], headers: dict[str, str] | None) -> None:
+def download_with_requests(
+    gists: list[Gist], headers: dict[str, str] | None, directory: Path
+) -> None:
     gist_count: int = len(gists)
     count_digit: int = len((str(gist_count)))
+    util.validate_directory(directory)
+    directory.mkdir(parents=True, exist_ok=True)
     for i, gist in enumerate(gists, start=1):
         gist_name: str = name_gist(gist)
-        gist_dir: Path = Path(gist_name)
-        if not gist_dir.exists():
-            gist_dir.mkdir()
-            print(f"[{i:>{count_digit}}/{gist_count}] Downloading '{gist_name}'...")
+        gist_path: Path = directory / gist_name
+        util.validate_directory(gist_path)
+        if not gist_path.exists():
+            print(f"[{i:>{count_digit}}/{gist_count}] Downloading '{gist_path}'...")
         else:
-            shutil.rmtree(gist_dir)
-            gist_dir.mkdir()
-            print(f"[{i:>{count_digit}}/{gist_count}] Updating '{gist_name}'...")
+            shutil.rmtree(gist_path)
+            print(f"[{i:>{count_digit}}/{gist_count}] Updating '{gist_path}'...")
+        gist_path.mkdir(parents=True, exist_ok=True)
         files: dict[str, dict[str, str]] = gist["files"]
         for filename in files:
             gist_url: str = files[filename]["raw_url"]
@@ -29,21 +33,25 @@ def download_with_requests(gists: list[Gist], headers: dict[str, str] | None) ->
             )
             response.raise_for_status()
             safe_filename: str = Path(filename).name
-            (gist_dir / safe_filename).write_bytes(response.content)
+            (gist_path / safe_filename).write_bytes(response.content)
 
 
-def download_with_git(gists: list[Gist]) -> None:
+def download_with_git(gists: list[Gist], directory: Path) -> None:
     gist_count: int = len(gists)
     count_digit: int = len((str(gist_count)))
+    util.validate_directory(directory)
+    directory.mkdir(parents=True, exist_ok=True)
     for i, gist in enumerate(gists, start=1):
-        gist_name: str = name_gist(gist)
         gist_pull_url: str = f"git@gist.github.com:{gist['id']}.git"
-        if not Path(gist_name).exists():
+        gist_name: str = name_gist(gist)
+        gist_path: Path = directory / gist_name
+        util.validate_directory(gist_path)
+        if not gist_path.exists():
             print(f"[{i:>{count_digit}}/{gist_count}]", end=" ", flush=True)
-            subprocess.call(["git", "clone", "--recursive", gist_pull_url, gist_name])
+            subprocess.call(["git", "clone", "--recursive", gist_pull_url, gist_path])
         else:
             print(f"[{i:>{count_digit}}/{gist_count}] Pulling '{gist_name}'...")
-            subprocess.call(["git", "-C", gist_name, "pull", "--recurse-submodules"])
+            subprocess.call(["git", "-C", gist_path, "pull", "--recurse-submodules"])
 
 
 def name_gist(gist: Gist) -> str:
@@ -84,7 +92,11 @@ def filter_gists(gists: list[Gist], filters: FiltersConfig) -> list[Gist]:
 
 
 def download_gists(
-    username: str, token: str | None, git_enabled: bool, filters: FiltersConfig
+    username: str,
+    token: str | None,
+    git_enabled: bool,
+    filters: FiltersConfig,
+    directory: Path,
 ) -> None:
     headers: dict[str, str] | None = (
         {"Authorization": f"token {token}"} if token else None
@@ -93,6 +105,6 @@ def download_gists(
     filtered_gists: list[Gist] = filter_gists(gists, filters)
 
     if git_enabled:
-        download_with_git(filtered_gists)
+        download_with_git(filtered_gists, directory)
     else:
-        download_with_requests(filtered_gists, headers)
+        download_with_requests(filtered_gists, headers, directory)
